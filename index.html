@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi bitácora | Rueda de la vida</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="welcome-active">
+    <section id="welcome-screen" class="welcome-screen" aria-labelledby="welcome-title">
+        <div class="welcome-content">
+            <span class="welcome-mark"><i class="fa-solid fa-book-open"></i></span>
+            <p class="eyebrow">Bienvenido a</p>
+            <h1 id="welcome-title">La bitácora de<br><em>Daniel</em></h1>
+            <p class="welcome-copy">Un espacio para recordar, agradecer y seguir creciendo.</p>
+            <button id="enter-bitacora" class="enter-button" type="button">Entrar a mi bitácora <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </section>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#inicio"><i class="fa-solid fa-book-open"></i><span>Mi bitácora</span></a>
+            <nav aria-label="Navegación principal"><a href="#rueda">Rueda de la vida</a><a href="#bitacora">Bitácora</a><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Activar modo oscuro" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button></nav>
+        </div>
+    </header>
+
+    <main id="inicio" class="container">
+        <section class="intro"><p class="eyebrow">Una pausa para observar</p><h1>Pequeños momentos,<br><em>grandes aprendizajes.</em></h1><p class="intro-copy">Un registro personal de acciones, emociones y vínculos que hicieron especial cada día.</p></section>
+
+        <section id="rueda" class="section-block">
+            <div class="section-heading"><div><p class="eyebrow">Balance personal</p><h2>Rueda de la vida</h2></div><p>Una mirada honesta a mis dimensiones personales.</p></div>
+            <div class="chart-panel"><div class="chart-intro"><span class="chart-badge"><i class="fa-solid fa-compass"></i> Mi balance</span><strong id="chart-summary">6.3 / 10</strong><small>promedio general</small></div><div class="chart-wrap"><canvas id="wheelChart"></canvas></div><div class="legend" aria-label="Niveles de satisfacción"><span><i class="level level-high"></i> Alto (7-10)</span><span><i class="level level-medium"></i> En progreso (4-6)</span><span><i class="level level-low"></i> Por cuidar (0-3)</span></div></div>
+        </section>
+
+        <section id="bitacora" class="section-block"><div class="section-heading"><div><p class="eyebrow">Registro semanal</p><h2>Bitácora diaria</h2></div><p>Doce momentos para recordar y agradecer.</p></div><div class="filters" aria-label="Filtros de la bitácora"><div class="filter-group"><label for="day-filter">Día</label><select id="day-filter"><option value="todos">Todos los días</option><option>Viernes</option><option>Sábado</option><option>Domingo</option><option>Lunes</option></select></div><div class="filter-group"><label for="area-filter">Área de la rueda</label><select id="area-filter"><option value="todas">Todas las áreas</option><option value="Espiritualidad">Espiritualidad</option><option value="Crecimiento personal">Crecimiento personal</option><option value="Salud">Salud</option><option value="Familia">Familia</option><option value="Puntos de apoyo social">Puntos de apoyo social</option></select></div><button id="clear-filters" class="clear-filters" type="button"><i class="fa-solid fa-rotate-left"></i> Limpiar filtros</button><span id="filter-count" class="filter-count"></span></div><div id="days-container"></div></section>
+    </main>
+
+    <footer><div class="container"><span>Mi bitácora</span><span>Con amor a la clase del ser</span></div></footer>
+
+    <script>
+        const welcomeScreen = document.getElementById('welcome-screen');
+        document.getElementById('enter-bitacora').addEventListener('click', () => {
+            welcomeScreen.classList.add('is-hidden');
+            document.body.classList.remove('welcome-active');
+        });
+
+        const bitacoraData = [
+            { day: 'Viernes', cards: [
+                { cat: 'Espiritualidad', action: 'Saludo a mi papá.', emotion: 'Gratitud y calma.', learning: 'Un pequeño gesto fortalece los vínculos diarios.', img: 'BITACORA/img/viernes-espiritualidad.jpg', icon: 'fa-om' },
+                { cat: 'Familia', action: 'Vitrineamos el centro comercial.', emotion: 'Alegría y relajación.', learning: 'Disfrutar del tiempo juntos sin gastar de más.', img: 'BITACORA/img/viernes-familia.jpg', icon: 'fa-people-roof' },
+                { cat: 'Crecimiento personal', action: 'Tomo un momento para respirar.', emotion: 'Paz interior.', learning: 'Pausar recarga energías y centra la mente.', img: 'BITACORA/img/viernes-crecimiento-personal.jpg', icon: 'fa-seedling' }
+            ]},
+            { day: 'Sábado', cards: [
+                { cat: 'Salud', action: 'Visitamos Laguna Negra.', emotion: 'Asombro y vitalidad.', learning: 'El contacto natural renueva el espíritu.', img: 'BITACORA/img/sabado-salud.jpg', icon: 'fa-heart-pulse' },
+                { cat: 'Puntos de apoyo social', action: 'Viajamos con el grupo de bikers.', emotion: 'Entusiasmo y hermandad.', learning: 'Compartir pasiones fortalece la comunidad.', img: 'BITACORA/img/sabado-apoyo-social.jpg', icon: 'fa-users' },
+                { cat: 'Familia', action: 'Compartimos con mis primos.', emotion: 'Felicidad y nostalgia.', learning: 'Mantener vivas las relaciones familiares da arraigo.', img: 'BITACORA/img/sabado-familia.jpg', icon: 'fa-people-roof' }
+            ]},
+            { day: 'Domingo', cards: [
+                { cat: 'Espiritualidad', action: 'Conocemos un naciente.', emotion: 'Conexión profunda.', learning: 'La naturaleza enseña sobre el origen de la vida.', img: 'BITACORA/img/domingo-espiritualidad.jpg', icon: 'fa-om' },
+                { cat: 'Puntos de apoyo social', action: 'Compartimos un rato chévere.', emotion: 'Diversión y desahogo.', learning: 'Reír con amigos es terapia pura.', img: 'BITACORA/img/domingo-apoyo-social.jpg', icon: 'fa-users' },
+                { cat: 'Espiritualidad', action: 'Hacemos hiking.', emotion: 'Superación y libertad.', learning: 'El esfuerzo físico aclara la mente.', img: 'BITACORA/img/domingo-espiritualidad-2.jpg', icon: 'fa-om' }
+            ]},
+            { day: 'Lunes', cards: [
+                { cat: 'Salud', action: 'Mejoro mi alimentación.', emotion: 'Motivación.', learning: 'Cuidar mi cuerpo es el primer paso para sentirme bien.', img: 'BITACORA/img/lunes-salud.jpg', icon: 'fa-heart-pulse' },
+                { cat: 'Salud', action: 'Salgo a caminar con Luna.', emotion: 'Ternura.', learning: 'Las mascotas nos enseñan a vivir el presente.', img: 'BITACORA/img/lunes-salud-2.jpg', icon: 'fa-heart-pulse' },
+                { cat: 'Familia', action: 'Comparto una media tarde con mi familia.', emotion: 'Amor y compañía.', learning: 'Los momentos diarios construyen grandes recuerdos.', img: 'BITACORA/img/lunes-familia.jpg', icon: 'fa-people-roof' }
+            ]}
+        ];
+
+        const daysContainer = document.getElementById('days-container');
+        const dayFilter = document.getElementById('day-filter');
+        const areaFilter = document.getElementById('area-filter');
+        const filterCount = document.getElementById('filter-count');
+
+        function renderBitacora() {
+            const selectedDay = dayFilter.value;
+            const selectedArea = areaFilter.value;
+            const visibleGroups = bitacoraData.map(group => ({ ...group, cards: group.cards.filter(card => selectedArea === 'todas' || card.cat === selectedArea) })).filter(group => (selectedDay === 'todos' || group.day === selectedDay) && group.cards.length);
+            const visibleCards = visibleGroups.reduce((total, group) => total + group.cards.length, 0);
+            daysContainer.innerHTML = '';
+            filterCount.textContent = `${visibleCards} ${visibleCards === 1 ? 'registro' : 'registros'}`;
+            if (!visibleCards) { daysContainer.innerHTML = '<div class="empty-state"><i class="fa-regular fa-face-meh"></i><p>No hay registros para estos filtros.</p></div>'; return; }
+            visibleGroups.forEach(({ day, cards }) => {
+                const section = document.createElement('section');
+                section.className = 'day-section';
+                section.innerHTML = `<h3><i class="fa-regular fa-calendar"></i>${day}</h3><div class="cards-grid"></div>`;
+                const grid = section.querySelector('.cards-grid');
+                cards.forEach(card => {
+                    const article = document.createElement('article');
+                    article.className = 'entry-card';
+                    article.innerHTML = `<img src="${card.img}" alt="${card.cat} - ${day}" loading="lazy"><div class="entry-content"><span class="category"><i class="fa-solid ${card.icon}"></i>${card.cat}</span><div class="entry-field"><small>Acción</small><p>${card.action}</p></div><div class="entry-field"><small>Emoción</small><p><i class="fa-regular fa-face-smile"></i>${card.emotion}</p></div><div class="entry-field learning"><small>Aprendizaje</small><p>${card.learning}</p></div></div>`;
+                    grid.appendChild(article);
+                });
+                daysContainer.appendChild(section);
+            });
+        }
+
+        dayFilter.addEventListener('change', renderBitacora);
+        areaFilter.addEventListener('change', renderBitacora);
+        document.getElementById('clear-filters').addEventListener('click', () => { dayFilter.value = 'todos'; areaFilter.value = 'todas'; renderBitacora(); });
+        renderBitacora();
+
+        const wheelValues = [6, 5, 8, 7, 3, 8, 7];
+        const wheelColors = ['#c9a66b', '#d8bd91', '#8c9a72', '#a7b28d', '#c98b76', '#87966d', '#d8bd91'];
+        document.getElementById('chart-summary').textContent = `${(wheelValues.reduce((sum, value) => sum + value, 0) / wheelValues.length).toFixed(1)} / 10`;
+        const wheelChart = new Chart(document.getElementById('wheelChart'), {
+            type: 'polarArea',
+            data: { labels: ['Espiritualidad', 'Crecimiento personal', 'Finanzas', 'Apoyo social', 'Salud', 'Familia', 'Trabajo / estudio'], datasets: [{ data: wheelValues, backgroundColor: wheelColors, borderColor: '#f7f1e8', borderWidth: 4, hoverBorderColor: '#564c42', hoverBorderWidth: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, animation: { animateRotate: true, duration: 1200 }, scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#887b6c', backdropColor: 'transparent', font: { weight: '600' } }, grid: { color: '#d9cdbd', lineWidth: 1.2 }, angleLines: { color: '#d9cdbd' }, pointLabels: { color: '#564c42', padding: 14, font: { family: 'DM Sans', size: 12, weight: '700' } } } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#564c42', padding: 14, cornerRadius: 5, displayColors: true, callbacks: { label: context => ` ${context.label}: ${context.raw}/10` } } } }
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        function setTheme(theme) { document.body.classList.toggle('dark-mode', theme === 'dark'); themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'); localStorage.setItem('theme', theme); wheelChart.data.datasets[0].borderColor = theme === 'dark' ? '#28231f' : '#f7f1e8'; wheelChart.options.scales.r.ticks.color = theme === 'dark' ? '#cbbdad' : '#887b6c'; wheelChart.options.scales.r.grid.color = theme === 'dark' ? '#554a40' : '#d9cdbd'; wheelChart.options.scales.r.angleLines.color = theme === 'dark' ? '#554a40' : '#d9cdbd'; wheelChart.options.scales.r.pointLabels.color = theme === 'dark' ? '#f3e7d7' : '#564c42'; wheelChart.update(); }
+        setTheme(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+        themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark'));
+    </script>
+</body>
+</html>
